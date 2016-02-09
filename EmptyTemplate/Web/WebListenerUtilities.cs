@@ -3,7 +3,7 @@ using System.Fabric;
 
 namespace Web
 {
-    public static class AddressUtilities
+    public static class WebListenerUtilities
     {
         public static string GetListeningAddress(string endpointName, string urlPrefix = null)
         {
@@ -31,6 +31,11 @@ namespace Web
 
         public static string GetPublishingAddress(string listeningAddress)
         {
+            if (string.IsNullOrEmpty(listeningAddress))
+            {
+                throw new ArgumentException(null, nameof(listeningAddress));
+            }
+
             return listeningAddress.Replace("+", FabricRuntime.GetNodeContext().IPAddressOrFQDN);
         }
     }

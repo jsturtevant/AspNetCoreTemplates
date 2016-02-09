@@ -40,7 +40,7 @@ namespace Web
 
             var serverAddressesFeature = _webHost.ServerFeatures.Get<IServerAddressesFeature>();
 
-            return Task.FromResult(string.Join(";", serverAddressesFeature.Addresses.Select(p => AddressUtilities.GetPublishingAddress(p))));
+            return Task.FromResult(string.Join(";", serverAddressesFeature.Addresses.Select(p => WebListenerUtilities.GetPublishingAddress(p))));
         }
     }
 }

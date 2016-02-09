@@ -12,7 +12,7 @@ namespace Web
             var webHost = new WebHostBuilder().UseDefaultConfiguration()
                                               .UseStartup<Startup>()
                                               .UseServer("Microsoft.AspNetCore.Server.WebListener")
-                                              .UseUrls(AddressUtilities.GetListeningAddress("WebTypeEndpoint"))
+                                              .UseUrls(WebListenerUtilities.GetListeningAddress("WebTypeEndpoint"))
                                               .Build();
 
             return new[] { new ServiceInstanceListener(_ => new AspNetCoreCommunicationListener(webHost)) };
