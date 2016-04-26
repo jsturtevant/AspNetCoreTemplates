@@ -1,27 +1,32 @@
-{
-  "version": "1.0.0-*",
+﻿{
   "compilationOptions": {
-    "emitEntryPoint": true
+    "emitEntryPoint": true,
+    "preserveCompilationContext": true
   },
 
   "dependencies": {
-    "Microsoft.AspNetCore.Server.WebListener": "0.1.0-rc2-*",
-    "Microsoft.ServiceFabric": "4.4.87-preview",
-    "Microsoft.ServiceFabric.Services": "1.4.87-preview"
+    "Microsoft.AspNetCore.Server.Kestrel": "1.0.0-rc2-*"
   },
 
   "frameworks": {
-    "dnx451": { }
+    "net452": {
+      "dependencies": {
+        "Microsoft.ServiceFabric": "5.0.135",
+        "Microsoft.ServiceFabric.Services": "2.0.135"
+      }
+    }
   },
 
-  "exclude": [
-    "wwwroot",
-    "node_modules",
-    "PackageRoot"
+  "runtimes": {
+    "win7-x64": { }
+  },
+
+  "content": [
+    "wwwroot"
   ],
-  "publishExclude": [
-    "**.user",
-    "**.vspscc",
+
+  "exclude": [
+    "node_modules",
     "PackageRoot"
   ]
 }
