@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using System.Collections.Generic;
@@ -67,13 +68,15 @@ namespace Web
 
             Task<string> ICommunicationListener.OpenAsync(CancellationToken cancellationToken)
             {
+                var config = new ConfigurationBuilder().AddCommandLine(_args).Build();
+
                 var endpoint = FabricRuntime.GetActivationContext().GetEndpoint(_endpointName);
 
                 string serverUrl = $"{endpoint.Protocol}://{FabricRuntime.GetNodeContext().IPAddressOrFQDN}:{endpoint.Port}";
 
                 _webHost = new WebHostBuilder().UseKestrel()
                                                .UseContentRoot(Directory.GetCurrentDirectory())
-                                               .UseDefaultHostingConfiguration(_args)
+                                               .UseConfiguration(config)
                                                .UseStartup<Startup>()
                                                .UseUrls(serverUrl)
                                                .Build();

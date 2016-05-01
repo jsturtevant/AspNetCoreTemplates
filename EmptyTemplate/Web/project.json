@@ -1,10 +1,11 @@
 ﻿{
-  "compilationOptions": {
+  "buildOptions": {
     "emitEntryPoint": true,
     "preserveCompilationContext": true
   },
 
   "dependencies": {
+    "Microsoft.Extensions.Configuration.CommandLine": "1.0.0-rc2-*",
     "Microsoft.AspNetCore.Server.Kestrel": "1.0.0-rc2-*"
   },
 
