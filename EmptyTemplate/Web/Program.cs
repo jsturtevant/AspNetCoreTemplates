@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ namespace Web
         // Entry point for the application.
         public static void Main(string[] args)
         {
-            ServiceRuntime.RegisterServiceAsync("WebType", context => new WebHostingService(context, "WebTypeEndpoint", args)).GetAwaiter().GetResult();
+            ServiceRuntime.RegisterServiceAsync("WebType", context => new WebHostingService(context, "WebTypeEndpoint")).GetAwaiter().GetResult();
 
             Thread.Sleep(Timeout.Infinite);
         }
@@ -26,15 +25,13 @@ namespace Web
         internal sealed class WebHostingService : StatelessService, ICommunicationListener
         {
             private readonly string _endpointName;
-            private readonly string[] _args;
 
             private IWebHost _webHost;
 
-            public WebHostingService(StatelessServiceContext serviceContext, string endpointName, string[] args)
+            public WebHostingService(StatelessServiceContext serviceContext, string endpointName)
                 : base(serviceContext)
             {
                 _endpointName = endpointName;
-                _args = args;
             }
 
             #region StatelessService
@@ -68,15 +65,12 @@ namespace Web
 
             Task<string> ICommunicationListener.OpenAsync(CancellationToken cancellationToken)
             {
-                var config = new ConfigurationBuilder().AddCommandLine(_args).Build();
-
                 var endpoint = FabricRuntime.GetActivationContext().GetEndpoint(_endpointName);
 
                 string serverUrl = $"{endpoint.Protocol}://{FabricRuntime.GetNodeContext().IPAddressOrFQDN}:{endpoint.Port}";
 
                 _webHost = new WebHostBuilder().UseKestrel()
                                                .UseContentRoot(Directory.GetCurrentDirectory())
-                                               .UseConfiguration(config)
                                                .UseStartup<Startup>()
                                                .UseUrls(serverUrl)
                                                .Build();

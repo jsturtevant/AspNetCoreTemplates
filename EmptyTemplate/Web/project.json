@@ -1,11 +1,15 @@
 ﻿{
   "buildOptions": {
     "emitEntryPoint": true,
-    "preserveCompilationContext": true
+    "preserveCompilationContext": true,
+    "compile": {
+      "exclude": [
+        "PackageRoot"
+      ]
+    }
   },
 
   "dependencies": {
-    "Microsoft.Extensions.Configuration.CommandLine": "1.0.0-rc2-*",
     "Microsoft.AspNetCore.Server.Kestrel": "1.0.0-rc2-*"
   },
 
@@ -20,14 +24,5 @@
 
   "runtimes": {
     "win7-x64": { }
-  },
-
-  "content": [
-    "wwwroot"
-  ],
-
-  "exclude": [
-    "node_modules",
-    "PackageRoot"
-  ]
+  }
 }
