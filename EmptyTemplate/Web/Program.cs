@@ -22,7 +22,7 @@ namespace Web
         /// <summary>
         /// A specialized stateless service for hosting ASP.NET Core web apps.
         /// </summary>
-        internal sealed class WebHostingService : StatelessService, ICommunicationListener
+        internal sealed class WebHostingService : StatelessService
         {
             private readonly string _endpointName;
 
@@ -38,49 +38,11 @@ namespace Web
 
             protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
             {
-                return new[] { new ServiceInstanceListener(_ => this) };
+                return new[] { new ServiceInstanceListener(serviceContext => new AspnetCoreCommunicationListener(new WebHostBuilder(), serviceContext, _endpointName)) };
             }
 
             #endregion StatelessService
 
-            #region ICommunicationListener
-
-            void ICommunicationListener.Abort()
-            {
-                if (_webHost != null)
-                {
-                    _webHost.Dispose();
-                }
-            }
-
-            Task ICommunicationListener.CloseAsync(CancellationToken cancellationToken)
-            {
-                if (_webHost != null)
-                {
-                    _webHost.Dispose();
-                }
-
-                return Task.FromResult(true);
-            }
-
-            Task<string> ICommunicationListener.OpenAsync(CancellationToken cancellationToken)
-            {
-                var endpoint = FabricRuntime.GetActivationContext().GetEndpoint(_endpointName);
-
-                string serverUrl = $"{endpoint.Protocol}://{FabricRuntime.GetNodeContext().IPAddressOrFQDN}:{endpoint.Port}";
-
-                _webHost = new WebHostBuilder().UseKestrel()
-                                               .UseContentRoot(Directory.GetCurrentDirectory())
-                                               .UseStartup<Startup>()
-                                               .UseUrls(serverUrl)
-                                               .Build();
-
-                _webHost.Start();
-
-                return Task.FromResult(serverUrl);
-            }
-
-            #endregion ICommunicationListener
         }
     }
 }
